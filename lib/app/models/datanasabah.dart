@@ -1,38 +1,25 @@
-class DataNasabah {
+class UserModel {
   final int id;
-  final String fullName;
-  final String phone;
-  final String noKK;
-  final String profilePicture;
-  final String address;
+  final String email;
+  final String firstName;
+  final String lastName;
+  final String avatar;
 
-  DataNasabah({
+  UserModel({
     required this.id,
-    required this.fullName,
-    required this.phone,
-    required this.noKK,
-    required this.profilePicture,
-    required this.address,
+    required this.email,
+    required this.firstName,
+    required this.lastName,
+    required this.avatar,
   });
 
-  factory DataNasabah.fromJson(Map<String, dynamic> json) {
-    return DataNasabah(
+  factory UserModel.fromJson(Map<String, dynamic> json) {
+    return UserModel(
       id: json['id'],
-      fullName: json['full_name'],
-      phone: json['phone'],
-      noKK: json['no_kk'],
-      profilePicture: json['profile_picture'],
-      address: json['address'],
+      email: json['email'],
+      firstName: json['first_name'],
+      lastName: json['last_name'],
+      avatar: json['avatar'],
     );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'full_name': fullName,
-      'phone': phone,
-      'no_kk': noKK,
-      'profile_picture': profilePicture,
-      'address': address,
-    };
   }
 }

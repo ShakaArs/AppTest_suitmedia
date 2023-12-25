@@ -22,25 +22,27 @@ class DataNasabahView extends GetView<DataNasabahController> {
       body: SingleChildScrollView(
         child: Obx(
           () {
-            if (controller.isLoading.value) {
+            if (controller.users.isEmpty) {
+              // Show a message if the data list is empty
               return Center(
-                child: CircularProgressIndicator(),
+                child: Text('No data available'),
+              );
+            } else {
+              // Display the data using a ListView.builder
+              return ListView.builder(
+                itemCount: controller.users.length,
+                itemBuilder: (context, index) {
+                  var user = controller.users[index];
+                  return ListTile(
+                    title: Text("${user.firstName} ${user.lastName}"),
+                    subtitle: Text(user.email),
+                    leading: CircleAvatar(
+                      backgroundImage: NetworkImage(user.avatar),
+                    ),
+                  );
+                },
               );
             }
-
-            return ListView.builder(
-              itemCount: controller.users.length,
-              itemBuilder: (context, index) {
-                var user = controller.users[index];
-                return ListTile(
-                  title: Text("${user['first_name']} ${user['last_name']}"),
-                  subtitle: Text(user['email']),
-                  leading: CircleAvatar(
-                    backgroundImage: NetworkImage(user['avatar']),
-                  ),
-                );
-              },
-            );
           },
         ),
       ),

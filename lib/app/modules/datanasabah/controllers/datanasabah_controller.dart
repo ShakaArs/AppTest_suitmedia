@@ -1,50 +1,45 @@
+// Updated DataNasabahController
+import 'dart:convert';
+
 import 'package:get/get.dart';
-import 'package:dio/dio.dart';
+import 'package:http/http.dart' as http;
+
+import '../../../models/datanasabah.dart';
 
 class DataNasabahController extends GetxController {
-  RxList<Map<String, dynamic>> users = RxList<Map<String, dynamic>>();
-  var isLoading = true.obs;
+  RxList<UserModel> users = RxList<UserModel>();
 
-  Future<void> loadData() async {
-    await getDataNasabah();
-  }
-
-  Future<void> getDataNasabah() async {
+  Future<void> loadTransaksi() async {
     try {
-      // Ganti URL dengan URL API yang sesuai
-      var apiUrl = 'https://reqres.in/api/users?page=1&per_page=10';
-
-      var response = await Dio().get(apiUrl);
+      var url = Uri.parse('https://reqres.in/api/users?page=1&per_page=10');
+      http.Response response = await http.get(url);
 
       if (response.statusCode == 200) {
-        var responseData = response.data;
+        var responseData = jsonDecode(response.body);
+        var data = responseData['data'];
 
-        // Ganti dengan ekstraksi data sesuai respons API Anda
-        var userData = responseData['data'];
-
-        users.assignAll(List<Map<String, dynamic>>.from(userData));
+        if (data != null && data.isNotEmpty) {
+          users.assignAll(List<UserModel>.from(data.map((user) => UserModel(
+                firstName: user['first_name'],
+                lastName: user['last_name'],
+                email: user['email'],
+                avatar: user['avatar'],
+                id: user['id'],
+              ))));
+        } else {
+          print('Data is empty or null');
+        }
       } else {
-        // Handle kesalahan status code jika diperlukan
-        print('Failed to load data: ${response.statusCode}');
+        print('Error: ${response.reasonPhrase}');
       }
-    } catch (error) {
-      // Handle kesalahan umum jika diperlukan
-      print('Error loading data: $error');
-    } finally {
-      isLoading.value = false;
-      update(); // Memperbarui tampilan
+    } catch (e) {
+      print('Error: $e');
     }
   }
 
   @override
   void onInit() {
-    loadData();
+    loadTransaksi();
     super.onInit();
-  }
-
-  @override
-  void onReady() {
-    loadData();
-    super.onReady();
   }
 }
