@@ -19,32 +19,23 @@ class DataNasabahView extends GetView<DataNasabahController> {
         backgroundColor: Colors.white,
         iconTheme: IconThemeData(color: Colors.black),
       ),
-      body: SingleChildScrollView(
-        child: Obx(
-          () {
-            if (controller.users.isEmpty) {
-              // Show a message if the data list is empty
-              return Center(
-                child: Text('No data available'),
+      body: Obx(
+        () {
+          // Display the data using a ListView.builder
+          return ListView.builder(
+            itemCount: controller.users.length,
+            itemBuilder: (context, index) {
+              var user = controller.users[index];
+              return ListTile(
+                title: Text("${user.firstName} ${user.lastName}"),
+                subtitle: Text(user.email),
+                leading: CircleAvatar(
+                  backgroundImage: NetworkImage(user.avatar),
+                ),
               );
-            } else {
-              // Display the data using a ListView.builder
-              return ListView.builder(
-                itemCount: controller.users.length,
-                itemBuilder: (context, index) {
-                  var user = controller.users[index];
-                  return ListTile(
-                    title: Text("${user.firstName} ${user.lastName}"),
-                    subtitle: Text(user.email),
-                    leading: CircleAvatar(
-                      backgroundImage: NetworkImage(user.avatar),
-                    ),
-                  );
-                },
-              );
-            }
-          },
-        ),
+            },
+          );
+        },
       ),
     );
   }

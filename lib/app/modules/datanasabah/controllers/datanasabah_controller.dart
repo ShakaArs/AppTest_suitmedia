@@ -1,6 +1,5 @@
 // Updated DataNasabahController
 import 'dart:convert';
-
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
@@ -16,16 +15,14 @@ class DataNasabahController extends GetxController {
 
       if (response.statusCode == 200) {
         var responseData = jsonDecode(response.body);
+        print('Response Data: $responseData'); // Tambahkan baris ini
         var data = responseData['data'];
-
         if (data != null && data.isNotEmpty) {
-          users.assignAll(List<UserModel>.from(data.map((user) => UserModel(
-                firstName: user['first_name'],
-                lastName: user['last_name'],
-                email: user['email'],
-                avatar: user['avatar'],
-                id: user['id'],
-              ))));
+          users.value = List<UserModel>.from(
+            data.map(
+              (model) => UserModel.fromJson(model),
+            ),
+          );
         } else {
           print('Data is empty or null');
         }
@@ -41,5 +38,11 @@ class DataNasabahController extends GetxController {
   void onInit() {
     loadTransaksi();
     super.onInit();
+  }
+
+  @override
+  void onReady() {
+    loadTransaksi();
+    super.onReady();
   }
 }
